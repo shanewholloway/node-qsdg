@@ -1,0 +1,77 @@
+import {version} from '../package.json'
+import {opt_qsrv_tls, opt_argv_context} from 'qsrv/esm/cli_qsrv.mjs'
+import {qsdg_server} from 'qsdg'
+
+
+const qsdg_help = @{}
+  '--dg': ['[DGRAM PORT]', 'relay specified datagram ports', '[8099]'],
+  '--dg-all': ['', 'relay datagram ports as subscribed by the browser', 'false']
+
+  ' 1 ': true
+
+  '-p': ['[PORT]', 'alias for --port', '$QSDG_PORT or 8088']
+  '--port': ['[PORT]', 'set the listening port', '$QSDG_PORT or 8088']
+  '--listen': ['[IP4-ADDR]', 'set the default listing address', '$QSDG_ADDR or 0.0.0.0']
+
+  ' 2 ': true
+
+  '--tls': ['[PATH]', 'set the TLS path per https://mkcert.dev', '$QSRV_TLS']
+  '--cert': ['[PEM-FILE]', 'set the TLS public certificate path', '$QSRV_TLS_CERT']
+  '--key': ['[PEM-FILE]', 'set the TLS private key path', '$QSRV_TLS_KEY']
+
+
+const qsdg_argv = @{}
+  __proto__: opt_argv_context
+  help: qsdg_help
+  show_help_banner() ::
+    console.log()
+    console.log @ `Quick Datagram Relay Server (qsdg v${version})`
+    console.log()
+
+  '--dg' (opt, tip, argv) :: opt_concat @ opt, 'dg_relay', argv.shift()
+  '--dg-all' (opt, tip, argv) :: opt.dg_relay = true
+
+  '-p' (opt, tip, argv) :: opt.port = + argv.shift()
+  '--port' (opt, tip, argv) :: opt.port = + argv.shift()
+  '--listen' (opt, tip, argv) :: opt.listen_addr = argv.shift()
+
+  '--tls' (opt, tip, argv) :: opt_assign_creds @ opt, argv.shift()
+  '--cert' (opt, tip, argv) :: opt_assign_creds @ opt, argv.shift(), 'cert'
+  '--key' (opt, tip, argv) :: opt_assign_creds @ opt, argv.shift(), 'key'
+
+
+
+export default qsdg_main
+export async function qsdg_main(argv = process.argv.slice(2), env = process.env) ::
+  try ::
+    const opt = @{}
+      port: + env.QSDG_PORT || 8088
+      listen_addr: env.QSDG_ADDR || '0.0.0.0'
+      dg_listen_addr: '127.0.0.1'
+      dg_relay: [8099]
+
+      ... opt_qsrv_tls({}, env)
+      ... qsdg_argv.parse(argv)
+
+    if opt.debug :: console.dir(opt)
+    return await qsdg_server(opt || opt_default)
+
+  catch err ::
+    console.error('')
+    console.error(err)
+    console.error('')
+    process.exit(1)
+
+
+export function show_banner(qsdg) ::
+  const {all_urls} = qsdg
+
+  console.log('')
+  console.log @ `Quick Datagram Relay Server (qsdg v${version})`
+  console.log('')
+
+  if all_urls ::
+    for const url of all_urls.IPv4 ::
+      console.log @ `  ${url}/dg_relay?{dgram_port}`
+  console.log('')
+

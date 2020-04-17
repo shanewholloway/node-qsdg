@@ -1,0 +1,26 @@
+import @{}
+  qsrv_core_server
+  qsrv_composed_ready
+  bind_urls_for_interfaces
+  bind_qsrv_handler
+  bind_exit_api
+  bind_dgram_relay
+from 'qsrv/esm/all.mjs'
+
+export const qsdg_options = @{}
+  port: 0, listen_addr: '0.0.0.0'
+  dg_listen_addr: '127.0.0.1'
+  dg_relay: true
+
+export default qsdg_server
+export async function qsdg_server(options={}) ::
+  options = @{} ... qsdg_options, ... options
+
+  bind_exit_api @ options
+  bind_dgram_relay @ options, options.dg_relay
+  await qsrv_core_server @ options, bind_qsrv_handler
+  bind_urls_for_interfaces(options)
+
+  await qsrv_composed_ready(options)
+  return options
+
