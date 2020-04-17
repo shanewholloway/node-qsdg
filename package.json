@@ -1,0 +1,17 @@
+{
+  "name": "qsdg",
+  "version": "0.0.1",
+  "description": "Quick web datagram relay server",
+  "license": "BSD-2-Clause",
+  "author": "Shane Holloway <shane.holloway@ieee.org>",
+  "files": [
+    "cjs/",
+    "code/",
+    "esm/"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "qsrv": "^0.1.2"
+  },
+  "scripts": {}
+}
