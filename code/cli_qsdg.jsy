@@ -1,5 +1,5 @@
 import {version} from '../package.json'
-import {opt_qsrv_tls, opt_argv_context} from 'qsrv/esm/cli_qsrv.mjs'
+import {opt_qsrv_tls, opt_concat, opt_argv_context} from 'qsrv/esm/cli_qsrv.mjs'
 import {qsdg_server} from 'qsdg'
 
 

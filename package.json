@@ -1,6 +1,6 @@
 {
   "name": "qsdg",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Quick web datagram relay server",
   "license": "BSD-2-Clause",
   "author": "Shane Holloway <shane.holloway@ieee.org>",
@@ -21,7 +21,7 @@
   "module": "esm/index.mjs",
   "dependencies": {},
   "devDependencies": {
-    "@rollup/plugin-json": "^4.0.2",
+    "@rollup/plugin-json": "^4.0.3",
     "@rollup/plugin-node-resolve": "^7.1.3",
     "qsdg": "file:.",
     "qsrv": "^0.1.3",
